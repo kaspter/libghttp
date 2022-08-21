@@ -12,6 +12,7 @@ Before first release:
 
 Blue sky:
 
-* Support SSL
+* Support MbedTLS
+* Support IPv6
 * Support Content-MD5 for sending and recieving entity bodies
 * Support gzip and deflate content encodings

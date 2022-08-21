@@ -47,8 +47,6 @@ static int http_trans_buf_free(http_trans_conn *a_conn);
 int
 http_trans_connect(http_trans_conn *a_conn)
 {
-  int err_ret;
-
   if ((a_conn == NULL) || (a_conn->host == NULL))
     goto ec;
   if (a_conn->hostinfo == NULL)
@@ -105,6 +103,7 @@ http_trans_connect(http_trans_conn *a_conn)
   /* initialize the SSL data structures */
   if (a_conn->use_ssl)
     {
+      int err_ret;
       if(a_conn->ssl_conn)
         {
           SSL_free(a_conn->ssl_conn);

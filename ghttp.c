@@ -65,6 +65,7 @@ ghttp_request *
 ghttp_request_new(void)
 {
   struct _ghttp_request *l_return = NULL;
+  char *proxy_env = NULL;
 
   /* create everything */
   l_return = malloc(sizeof(struct _ghttp_request));
@@ -74,6 +75,11 @@ ghttp_request_new(void)
   l_return->req = http_req_new();
   l_return->resp = http_resp_new();
   l_return->conn = http_trans_conn_new();
+
+  /* FIXME: Should this be done here or somewhere else? */
+  if((proxy_env = getenv("http_proxy")))
+    ghttp_set_proxy(l_return, proxy_env);
+
   l_return->secure_uri = 0;
   l_return->ssl_allowed = 0;
   return l_return;

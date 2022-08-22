@@ -311,9 +311,8 @@ http_trans_read_into_buf(http_trans_conn *a_conn)
   /* make sure there's enough space */
   if (http_trans_buf_free(a_conn) < a_conn->io_buf_io_left)
     {
-      a_conn->io_buf = realloc(a_conn->io_buf,
-			       a_conn->io_buf_len + a_conn->io_buf_io_left);
-      a_conn->io_buf_len += a_conn->io_buf_io_left;
+      a_conn->io_buf_len = a_conn->io_buf_alloc + a_conn->io_buf_io_left;
+      a_conn->io_buf = realloc(a_conn->io_buf, a_conn->io_buf_len);
     }
   /* check to see how much we should try to read */
   if (a_conn->io_buf_io_left > a_conn->io_buf_chunksize)

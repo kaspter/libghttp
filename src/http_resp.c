@@ -634,12 +634,19 @@ flush_response_body(http_resp *a_resp,
     free(a_resp->body);
   }
   a_resp->flushed_length += a_resp->body_len;
-  a_resp->body_len = a_conn->io_buf_alloc;
-  a_resp->body = malloc(a_conn->io_buf_alloc + 1);
-  memset(a_resp->body, 0, a_conn->io_buf_alloc + 1);
-  memcpy(a_resp->body, a_conn->io_buf, a_conn->io_buf_alloc);
-  /* clean the buffer */
-  http_trans_buf_reset(a_conn);
+
+  if (a_resp->body_state == http_resp_body_read_chunked) {
+      a_resp->body_len = 0;
+      a_resp->body = NULL;
+      /* leave conn buffer alone (can't just copy it with chunked encoding) */
+  } else {
+    a_resp->body_len = a_conn->io_buf_alloc;
+    a_resp->body = malloc(a_conn->io_buf_alloc + 1);
+    memset(a_resp->body, 0, a_conn->io_buf_alloc + 1);
+    memcpy(a_resp->body, a_conn->io_buf, a_conn->io_buf_alloc);
+    /* clean the buffer */
+    http_trans_buf_reset(a_conn);
+  }
 }
 
 void
